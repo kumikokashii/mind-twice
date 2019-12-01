@@ -10,7 +10,7 @@ class ItemScreen extends StatefulWidget {
 
 class _ItemScreenState extends State<ItemScreen> {
   _ItemScreenState();
-  DatabaseHelper dbHelper = DatabaseHelper.instance; //Create this singleton
+  // DatabaseHelper dbHelper = DatabaseHelper.instance; //Create this singleton
   Map<String, dynamic> itemContent = {}; //Add later
 
   void saveItem() {
@@ -18,11 +18,11 @@ class _ItemScreenState extends State<ItemScreen> {
     var itemToUpload = itemContent;
 
     //Upload to db
-    try {
-      dbHelper.upsert(itemToUpload);
-    } catch (e) {
-      print('Error when saving to database');
-    }
+    // try {
+    //   dbHelper.upsert(itemToUpload);
+    // } catch (e) {
+    //   print('Error when saving to database');
+    // }
   }
 
   @override

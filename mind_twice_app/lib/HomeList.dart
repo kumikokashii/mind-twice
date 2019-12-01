@@ -12,7 +12,7 @@ class HomeList extends StatefulWidget {
 
 class _HomeListState extends State<HomeList> {
   _HomeListState();
-  DatabaseHelper dbHelper = DatabaseHelper.instance; //Create this singleton
+  // DatabaseHelper dbHelper = DatabaseHelper.instance; //Create this singleton
 
   @override
   Widget build(BuildContext context) {

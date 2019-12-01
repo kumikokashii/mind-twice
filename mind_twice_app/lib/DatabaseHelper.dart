@@ -1,9 +1,7 @@
-
-
 class DatabaseHelper {
   //Singleton
 
   upsert() {
-    
+    ;
   }
 }

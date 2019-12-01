@@ -4,13 +4,25 @@ import './HomeList.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen();
-  
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  _HomeScreenState();
+  //Variables
+  Map<String, dynamic> listSettings;
+  //
+
+  _HomeScreenState()
+      : listSettings = {'sortByAscending': true},
+        super();
+
+  void onListSettingsChanged(newListSettings) {
+    setState(() {
+      listSettings = newListSettings;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +30,15 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text('App Bar Title'),
       ),
-      drawer: Drawer(child: HomeDrawer()),
-      body: HomeList(),
+      drawer: Drawer(
+        child: HomeDrawer(
+          listSettings: listSettings,
+          onListSettingsChanged: onListSettingsChanged
+          )),
+      body: Column(children: [
+        Text('Sort Order: ' + listSettings['sortByAscending'].toString()),
+        HomeList(),
+      ]),
       floatingActionButton: FloatingActionButton(
         child: Text('NEW'),
         onPressed: null, //todo::Add later
