@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
+import './UIList.dart';
 import './HomeDrawer.dart';
 import './HomeList.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen();
+  final UIList uiList;
+  HomeScreen(this.uiList);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomeScreenState createState() => _HomeScreenState(uiList.originalData);
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   //Variables
   Map<String, dynamic> listSettings;
+  Map<String, Item> originalData;
   //
 
-  _HomeScreenState()
+  _HomeScreenState(this.originalData)
       : listSettings = {'sortByAscending': true},
         super();
 
@@ -26,16 +29,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(originalData);
+    print(originalData.length);
+
     return (Scaffold(
       appBar: AppBar(
         title: Text('App Bar Title'),
       ),
       drawer: Drawer(
-        child: HomeDrawer(
-          listSettings: listSettings,
-          onListSettingsChanged: onListSettingsChanged
-          )),
+          child: HomeDrawer(
+              listSettings: listSettings,
+              onListSettingsChanged: onListSettingsChanged)),
       body: Column(children: [
+        Text(originalData['99'].title),
         Text('Sort Order: ' + listSettings['sortByAscending'].toString()),
         HomeList(),
       ]),
