@@ -17,21 +17,21 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<String, Item> originalData;
   //
 
+  //Constructor
   _HomeScreenState(this.originalData)
       : listSettings = {'sortByAscending': true},
         super();
 
+  //Methods
   void onListSettingsChanged(newListSettings) {
     setState(() {
       listSettings = newListSettings;
     });
   }
 
+  //Build
   @override
-  Widget build(BuildContext context) {
-    print(originalData);
-    print(originalData.length);
-
+  Widget build(BuildContext context) {    
     return (Scaffold(
       appBar: AppBar(
         title: Text('App Bar Title'),
@@ -40,11 +40,12 @@ class _HomeScreenState extends State<HomeScreen> {
           child: HomeDrawer(
               listSettings: listSettings,
               onListSettingsChanged: onListSettingsChanged)),
-      body: Column(children: [
-        Text(originalData['99'].title),
+      body: SingleChildScrollView(
+        child: Column(children: [
         Text('Sort Order: ' + listSettings['sortByAscending'].toString()),
-        HomeList(),
-      ]),
+        HomeList(widget.uiList.getFilteredAndSorted(listSettings)),
+      ])
+      ),
       floatingActionButton: FloatingActionButton(
         child: Text('NEW'),
         onPressed: null, //todo::Add later

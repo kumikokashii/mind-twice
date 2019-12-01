@@ -1,44 +1,53 @@
 import 'package:flutter/material.dart';
-import './DatabaseHelper.dart';
+import './UIList.dart';
 
 class ItemScreen extends StatefulWidget {
-  ItemScreen();
+  Item item;
+  ItemScreen(this.item);
 
   @override
-  _ItemScreenState createState() => _ItemScreenState();
+  _ItemScreenState createState() => _ItemScreenState(item);
 }
 
 class _ItemScreenState extends State<ItemScreen> {
-  _ItemScreenState();
-  // DatabaseHelper dbHelper = DatabaseHelper.instance; //Create this singleton
-  Map<String, dynamic> itemContent = {}; //Add later
+  Item item;
+  _ItemScreenState(this.item);
 
-  void saveItem() {
-    //Format item content if needed
-    var itemToUpload = itemContent;
-
-    //Upload to db
-    // try {
-    //   dbHelper.upsert(itemToUpload);
-    // } catch (e) {
-    //   print('Error when saving to database');
-    // }
+  //Parts
+  Widget datePart() {
+    return GestureDetector(
+        child: Container(
+      child: Text(item.date),
+    ));
   }
+
+  Widget picturePart() {
+    return Text('image part');
+  }
+
+  Widget firstNotePart() {
+    return Text('firstNotePart');
+  }
+
+  Widget secondNotePart() {
+    return Text('secondNotePart');
+  }
+
+  Widget saveButtonPart() {
+    return RaisedButton(child: Text('Save'), onPressed: null);
+  }
+  //End Parts
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('This reading...')),
-        body: Column(
-          children: <Widget>[
-            Text('Name Row'),
-            Text('Date Row'),
-            Text('ETC ^_^'),
-            RaisedButton(
-              child: Text('Save'),
-              onPressed: saveItem,
-            )
-          ],
-        ));
+        appBar: AppBar(title: Text(item.title)),
+        body: Column(children: [
+          datePart(),
+          picturePart(),
+          firstNotePart(),
+          secondNotePart(),
+          saveButtonPart(),
+        ]));
   }
 }
