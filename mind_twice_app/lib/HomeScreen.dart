@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import './UIList.dart';
 import './HomeDrawer.dart';
 import './HomeList.dart';
+import './ItemScreen.dart';
+
 
 class HomeScreen extends StatefulWidget {
   final UIList uiList;
@@ -31,25 +33,29 @@ class _HomeScreenState extends State<HomeScreen> {
 
   //Build
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     return (Scaffold(
-      appBar: AppBar(
-        title: Text('App Bar Title'),
-      ),
-      drawer: Drawer(
-          child: HomeDrawer(
-              listSettings: listSettings,
-              onListSettingsChanged: onListSettingsChanged)),
-      body: SingleChildScrollView(
-        child: Column(children: [
-        Text('Sort Order: ' + listSettings['sortByAscending'].toString()),
-        HomeList(widget.uiList.getFilteredAndSorted(listSettings)),
-      ])
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Text('NEW'),
-        onPressed: null, //todo::Add later
-      ),
-    ));
+        appBar: AppBar(
+          title: Text('Stuff to Mind Twice'),
+        ),
+        drawer: Drawer(
+            child: HomeDrawer(
+                listSettings: listSettings,
+                onListSettingsChanged: onListSettingsChanged)),
+        body: SingleChildScrollView(
+            child: Column(children: [
+          Text('Sort Order: ' + listSettings['sortByAscending'].toString()),
+          HomeList(widget.uiList.getFilteredAndSorted(listSettings)),
+        ])),
+        floatingActionButton: FloatingActionButton(
+            child: Text('NEW'),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ItemScreen(Item.newNoID()),
+                ),
+              );
+            })));
   }
 }

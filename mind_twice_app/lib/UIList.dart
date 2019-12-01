@@ -3,19 +3,21 @@ class UIList {
 
   UIList.defaultConstructor()
       : originalData = {
-          '0': Item('0', 'Reading 1', 'Today', 'Looks good!', 'See you!'),
-          '1': Item('1', 'Reading 12', 'Tomorrow', 'Looks good!', 'See you!'),
-          '10': Item('10', 'Reading 15', 'Go!', 'Looks good!', 'See you!'),
+          '0': Item('0', 'Reading 1 Long title long title what will happen?',
+              DateTime.now(), null, null, null, null),
+          '1': Item('0', 'Reading 1', DateTime.now(), null, null, DateTime(2020, 1, 2), null),
+          '10': Item('0', 'Reading 1', DateTime.now(), null, null, null, null),
         };
 
   Map<String, Item> getOriginalData() {
-    print("do you see me?");
-    Map fakeData = {};
-    fakeData['0'] = Item('0', 'Reading 1', 'Today', 'Looks good!', 'See you!');
-    fakeData['1'] =
-        Item('1', 'Reading 2', 'Tomorrow', 'Looks fantastico!', 'Good nite!');
+    // print("do you see me?");
+    // Map fakeData = {};
+    // fakeData['0'] =
+    //     Item('0', 'Reading 1', DateTime.now(), null, 'Looks good!', 'See you!');
+    // fakeData['1'] = Item('1', 'Reading 2', DateTime.now(), null,
+    //     'Looks fantastico!', 'Good nite!');
 
-    return fakeData;
+    // return fakeData;
   } //At initialization, and if choose to, later
 
   //Call this to set HomeScreen's state
@@ -48,9 +50,21 @@ class UIList {
 class Item {
   String id;
   String title;
-  String date;
+  DateTime date;
+  String image;
   String firstNote;
+  DateTime date4back;
   String secondNote;
 
-  Item(this.id, this.title, this.date, this.firstNote, this.secondNote);
+  Item(this.id, this.title, this.date, this.image, this.firstNote,
+      this.date4back, this.secondNote);
+
+  Item.newNoID() : 
+    id=null, title=null, date=DateTime.now(), image=null, firstNote=null, date4back=null, secondNote=null;
+
+  copy() {
+    Item newItem =
+        Item(id, title, date, image, firstNote, date4back, secondNote);
+    return newItem;
+  }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mind_twice_app/ItemScreen.dart';
+import 'package:intl/intl.dart';
+import './ItemScreen.dart';
 import './UIList.dart';
-// import './DatabaseHelper.dart';
 
 class HomeList extends StatelessWidget {
   final List<Item> items; //This is already sorted
@@ -9,16 +9,68 @@ class HomeList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return 
-      ListView.builder(
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          itemCount: items.length,
-          itemBuilder: (BuildContext context, int index) {
-            Item item = items[index];
-            return Card(child: ListTile(
-              title: Text(item.title),
-              subtitle: Text(item.date),
+    getStrDate(date) {
+      if (date == null) {
+        return '';
+      }
+      return DateFormat('E MMM d, y').format(date);
+    }
+
+    //For dates
+    getSmallTextContainer(text, bgColor) {
+      if (text == '') {
+        return SizedBox.shrink();
+      }
+
+      return (
+        Container(
+          child: Text(text,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[850]
+            )
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.all(Radius.circular(30)),
+          ),
+        )
+      );
+    }
+                        
+
+    return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: items.length,
+        itemBuilder: (BuildContext context, int index) {
+          Item item = items[index];
+          return GestureDetector(
+              child: Card(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(item.title,
+                        style: TextStyle(
+                          fontSize: 18,
+
+                        )
+                      ),
+                      padding: EdgeInsets.only(top: 14, right: 18, bottom: 7, left: 18)
+                    ),
+                    Row(
+                      children: <Widget>[
+                        getSmallTextContainer(getStrDate(item.date4back), Colors.pink[50]),
+                        getSmallTextContainer(getStrDate(item.date), Colors.green[50]),
+                      ],
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    )
+                  ],
+                ),
+              ),
               onTap: () {
                 Navigator.push(
                   context,
@@ -26,20 +78,7 @@ class HomeList extends StatelessWidget {
                     builder: (context) => ItemScreen(item),
                   ),
                 );
-              },
-            ));
-          }
-      );
+              });
+        });
   }
-  // (children: [
-  //   Text('List!'),
-  //   RaisedButton(
-  //       child: Text('To its own screen'),
-  //       onPressed: () {
-  //         Navigator.push(
-  //           context,
-  //           MaterialPageRoute(builder: (context) => ItemScreen()),
-  //         );
-  //       })
-  // ]);
 }
