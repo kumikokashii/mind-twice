@@ -27,6 +27,10 @@ class UIList {
     return id;
   }
 
+  Future<void> deleteItemInDB(item) async {
+    DatabaseHelper.instance.delete(item);
+  }
+
   //Fetch from db
   Future<void> setOriginalData() async {
     List dbOutput = await DatabaseHelper.instance.getAll();

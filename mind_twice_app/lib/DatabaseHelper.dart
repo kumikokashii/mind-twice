@@ -105,6 +105,17 @@ class DatabaseHelper {
     await db.rawUpdate(query);
   }
 
+  Future<void> delete(item) async {
+    Database db = await database;
+
+    String query = '''
+      DELETE FROM $table
+      WHERE $colId = ${int.parse(item.id)}
+    ''';
+
+    await db.rawDelete(query);
+  }
+
   Future<List> getAll() async {
     Database db = await database;
     String query = 'SELECT * FROM $table';

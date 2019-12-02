@@ -42,6 +42,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return id;
   }
 
+  Future<void> onDeleteItem(item) async {
+    await widget.uiList.deleteItemInDB(item);
+    await widget.uiList.setOriginalData();
+    setState(() {});
+  }
+
   //For sqlite db file location
   Future<void> getLocalPath() async {
     var directory = await getApplicationDocumentsDirectory();
@@ -62,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 listSettings: listSettings,
                 onListSettingsChanged: onListSettingsChanged)),
         
-        body: HomeList(widget.uiList.getFilteredAndSorted(listSettings), onSaveItem),
+        body: HomeList(widget.uiList.getFilteredAndSorted(listSettings), onSaveItem, onDeleteItem),
 
         floatingActionButton: FloatingActionButton(
             child: Text('NEW'),

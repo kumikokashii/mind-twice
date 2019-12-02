@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:swipedetector/swipedetector.dart';
 import './ItemScreen.dart';
 import './UIList.dart';
 
 class HomeList extends StatelessWidget {
   final List<Item> items; //This is already sorted
   Function onSaveItem;
-  HomeList(this.items, this.onSaveItem);
+  Function onDeleteItem;
+  HomeList(this.items, this.onSaveItem, this.onDeleteItem);
+
+  Future<void> deleteItem(item) async {
+    onDeleteItem(item);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,37 +49,41 @@ class HomeList extends StatelessWidget {
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
           Item item = items[index];
-          return GestureDetector(
-              child: Card(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                        alignment: Alignment.centerLeft,
-                        child: Text(getTitleText(item),
-                            style: TextStyle(
-                              fontSize: 18,
-                            )),
-                        padding: EdgeInsets.only(
-                            top: 14, right: 18, bottom: 7, left: 18)),
-                    Row(
+          return SwipeDetector(
+              child: GestureDetector(
+                  child: Card(
+                    child: Column(
                       children: <Widget>[
-                        getSmallTextContainer(
-                            getStrDate(item.date4back), Colors.green[50]),
-                        getSmallTextContainer(
-                            getStrDate(item.date), Colors.yellow[50]),
+                        Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(getTitleText(item),
+                                style: TextStyle(
+                                  fontSize: 18,
+                                )),
+                            padding: EdgeInsets.only(
+                                top: 14, right: 18, bottom: 7, left: 18)),
+                        Row(
+                          children: <Widget>[
+                            getSmallTextContainer(
+                                getStrDate(item.date4back), Colors.green[50]),
+                            getSmallTextContainer(
+                                getStrDate(item.date), Colors.yellow[50]),
+                          ],
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        )
                       ],
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    )
-                  ],
-                ),
-              ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ItemScreen(item, onSaveItem),
+                    ),
                   ),
-                );
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ItemScreen(item, onSaveItem),
+                      ),
+                    );
+                  }),
+              onSwipeLeft: () {
+                deleteItem(item);
               });
         }));
   }
