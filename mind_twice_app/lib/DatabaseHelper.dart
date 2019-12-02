@@ -51,20 +51,20 @@ class DatabaseHelper {
   }
 
   //Queries
-  String str(text, {isDateTime = false}) {
-    if (text == null) {
+  String str(value, {isDateTime = false}) {
+    if (value == null) {
       return null;
     }
 
     if (isDateTime) {
-      text = text.toString();
+      value = value.toString();
     }
 
-    if (text.trim() == '') {
+    if (value.trim() == '') {
       return null;
     }
 
-    return '"' + text + '"';
+    return '"' + value + '"';
   }
 
   Future<int> insert(item) async {
@@ -93,10 +93,10 @@ class DatabaseHelper {
       UPDATE $table
       SET
         $colTitle = ${str(item.title)},
-        $colDate = ${str(item.date.toString())},
+        $colDate = ${str(item.date, isDateTime: true)},
         $colImage = ${str(item.image)},
         $colFirstNote = ${str(item.firstNote)},
-        $colDate4back = ${str(item.date4back.toString())},
+        $colDate4back = ${str(item.date4back, isDateTime: true)},
         $colSecondNote = ${str(item.secondNote)}
       WHERE
         $colId = ${int.parse(item.id)} 

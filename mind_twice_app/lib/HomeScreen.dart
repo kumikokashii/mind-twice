@@ -34,10 +34,12 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> onSaveItem(item) async {
-    await widget.uiList.saveItemInDB(item);
+  Future<String> onSaveItem(item) async {
+    String id = await widget.uiList.saveItemInDB(item);
     await widget.uiList.setOriginalData();
     setState(() {});
+
+    return id;
   }
 
   //For sqlite db file location
@@ -49,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   //Build
   @override
   Widget build(BuildContext context) {
-    // getLocalPath();
+    getLocalPath();
 
     return (Scaffold(
         appBar: AppBar(
@@ -59,11 +61,9 @@ class _HomeScreenState extends State<HomeScreen> {
             child: HomeDrawer(
                 listSettings: listSettings,
                 onListSettingsChanged: onListSettingsChanged)),
-        body: SingleChildScrollView(
-            child: Column(children: [
-          HomeList(
-              widget.uiList.getFilteredAndSorted(listSettings), onSaveItem),
-        ])),
+        
+        body: HomeList(widget.uiList.getFilteredAndSorted(listSettings), onSaveItem),
+
         floatingActionButton: FloatingActionButton(
             child: Text('NEW'),
             onPressed: () {

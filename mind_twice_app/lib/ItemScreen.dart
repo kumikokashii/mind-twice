@@ -23,14 +23,15 @@ class _ItemScreenState extends State<ItemScreen> {
         tempImage = null,
         super();
 
-  void saveItem() async {
+  Future<void> saveItem() async {
     //Format item
     if (tempImage != null) {
       List<int> imageBytes = await tempImage.readAsBytes();
       item.image = base64Encode(imageBytes);
     }
 
-    widget.onSaveItem(item);
+    String id = await widget.onSaveItem(item);
+    item.id = id;
   }
 
   //Parts

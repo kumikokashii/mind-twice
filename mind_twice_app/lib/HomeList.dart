@@ -39,9 +39,7 @@ class HomeList extends StatelessWidget {
       return item.title == null ? 'TBD' : item.title;
     }
 
-    return ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
+    return (ListView.builder(
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
           Item item = items[index];
@@ -77,6 +75,6 @@ class HomeList extends StatelessWidget {
                   ),
                 );
               });
-        });
+        }));
   }
 }
