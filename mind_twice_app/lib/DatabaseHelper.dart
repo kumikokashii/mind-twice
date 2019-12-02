@@ -51,10 +51,19 @@ class DatabaseHelper {
   }
 
   //Queries
-  String str(text) {
-    if (text == null || text.trim() == '') {
+  String str(text, {isDateTime = false}) {
+    if (text == null) {
       return null;
     }
+
+    if (isDateTime) {
+      text = text.toString();
+    }
+
+    if (text.trim() == '') {
+      return null;
+    }
+
     return '"' + text + '"';
   }
 
@@ -65,10 +74,10 @@ class DatabaseHelper {
       INSERT INTO $table ($colTitle, $colDate, $colImage, $colFirstNote, $colDate4back, $colSecondNote)
       VALUES(
         ${str(item.title)},
-        ${str(item.date.toString())},
+        ${str(item.date, isDateTime: true)},
         ${str(item.image)},
         ${str(item.firstNote)},
-        ${str(item.date4back.toString())},
+        ${str(item.date4back, isDateTime: true)},
         ${str(item.secondNote)}
       )
     ''';

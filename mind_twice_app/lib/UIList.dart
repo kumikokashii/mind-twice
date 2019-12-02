@@ -6,15 +6,15 @@ class UIList {
   UIList();
 
   //Temp while testing
-  UIList.defaultConstructor()
-      : originalData = {
-          '0': Item('0', 'Reading 1 Long title long title what will happen?',
-              DateTime.now(), null, null, null, null),
-          '1': Item('0', 'Reading 1', DateTime(2001, 3, 17), null, null,
-              DateTime(2020, 1, 2), null),
-          '10': Item(
-              '0', 'Reading 1', DateTime(2020, 1, 5), null, null, null, null),
-        };
+  // UIList.defaultConstructor()
+  //     : originalData = {
+  //         '0': Item('0', 'Reading 1 Long title long title what will happen?',
+  //             DateTime.now(), null, null, null, null),
+  //         '1': Item('0', 'Reading 1', DateTime(2001, 3, 17), null, null,
+  //             DateTime(2020, 1, 2), null),
+  //         '10': Item(
+  //             '0', 'Reading 1', DateTime(2020, 1, 5), null, null, null, null),
+  //       };
 
   Future<String> saveItemInDB(item) async {
     String id = item.id;
@@ -33,15 +33,15 @@ class UIList {
 
     Map<String, Item> output = {};
     dbOutput.forEach((itemDict) {
-      String id = itemDict['id'].toString();
+      String id = itemDict[colId].toString();
       DateTime date =
-          itemDict['date'] == null ? null : DateTime.parse(itemDict['date']);
-      DateTime date4back = itemDict['date4back'] == null
+          itemDict[colDate] == null ? null : DateTime.parse(itemDict[colDate]);
+      DateTime date4back = itemDict[colDate4back] == null
           ? null
-          : DateTime.parse(itemDict['date4back']);
+          : DateTime.parse(itemDict[colDate4back]);
 
-      Item item = Item(id, itemDict['title'], date, itemDict['image'],
-          itemDict['firstNote'], date4back, itemDict['secondNote']);
+      Item item = Item(id, itemDict[colTitle], date, itemDict[colImage],
+          itemDict[colFirstNote], date4back, itemDict[colSecondNote]);
 
       output[id] = item;
     });
@@ -70,7 +70,7 @@ class UIList {
     //Its possible that the date4back is null. Split and sort separately
     List<Item> nullList = [];
     List<Item> nonNullList = [];
-    
+
     if (settings['sortByDate4Back']) {
       output.forEach((item) {
         if (item.date4back == null) {
@@ -102,7 +102,7 @@ class UIList {
         nonNullList.sort((itemA, itemB) => itemB.date.compareTo(itemA.date));
       }
     }
-    
+
     output = []..addAll(nonNullList)..addAll(nullList);
     return output;
   }

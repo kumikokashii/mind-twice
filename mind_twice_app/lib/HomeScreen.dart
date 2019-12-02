@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import './UIList.dart';
 import './HomeDrawer.dart';
 import './HomeList.dart';
@@ -36,13 +37,20 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> onSaveItem(item) async {
     await widget.uiList.saveItemInDB(item);
     await widget.uiList.setOriginalData();
-    print('YAY');
     setState(() {});
+  }
+
+  //For sqlite db file location
+  Future<void> getLocalPath() async {
+    var directory = await getApplicationDocumentsDirectory();
+    print(directory.path);
   }
 
   //Build
   @override
   Widget build(BuildContext context) {
+    // getLocalPath();
+
     return (Scaffold(
         appBar: AppBar(
           title: Text('Stuff to Mind Twice'),
