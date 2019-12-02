@@ -6,10 +6,10 @@ import 'dart:io';
 import './UIList.dart';
 import './TextEditor.dart';
 
-
 class ItemScreen extends StatefulWidget {
   Item item;
-  ItemScreen(this.item);
+  Function onSaveItem;
+  ItemScreen(this.item, this.onSaveItem);
 
   @override
   _ItemScreenState createState() => _ItemScreenState(item);
@@ -22,6 +22,16 @@ class _ItemScreenState extends State<ItemScreen> {
       : this.item = item.copy(),
         tempImage = null,
         super();
+
+  void saveItem() async {
+    //Format item
+    if (tempImage != null) {
+      List<int> imageBytes = await tempImage.readAsBytes();
+      item.image = base64Encode(imageBytes);
+    }
+
+    widget.onSaveItem(item);
+  }
 
   //Parts
   Widget datePart(context) {
@@ -130,7 +140,7 @@ class _ItemScreenState extends State<ItemScreen> {
             ),
           );
           if (newNote == null) {
-              return;
+            return;
           }
           item.firstNote = newNote;
         });
@@ -189,18 +199,12 @@ class _ItemScreenState extends State<ItemScreen> {
             ),
           );
           if (newNote == null) {
-              return;
+            return;
           }
           item.secondNote = newNote;
         });
   }
   //End Parts
-
-  Item saveToDatabase() {
-    //Save item to database
-    print('saving...');
-    return item;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -236,7 +240,7 @@ class _ItemScreenState extends State<ItemScreen> {
         floatingActionButton: FloatingActionButton(
           child: Text('Save'),
           onPressed: () {
-            saveToDatabase();
+            saveItem();
           },
         ));
   }

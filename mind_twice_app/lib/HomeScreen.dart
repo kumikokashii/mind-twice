@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   _HomeScreenState(this.originalData)
       : listSettings = {
           'filterOnceOnly': false,
-          'sortByDate4Back': false, //Default is sort by date
+          'sortByDate4Back': false,
           'sortAscending': true
         },
         super();
@@ -32,6 +32,13 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       listSettings = newListSettings;
     });
+  }
+
+  onSaveItem(item) {
+    //do the thing
+    print('do the thing');
+    widget.uiList.saveItemInDB(item);
+    originalData = widget.uiList.getOriginalData();
   }
 
   //Build
@@ -47,10 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 onListSettingsChanged: onListSettingsChanged)),
         body: SingleChildScrollView(
             child: Column(children: [
-          Text('filterOnceOnly: ' + listSettings['filterOnceOnly'].toString()),
-          Text('sortByDate4Back: ' + listSettings['sortByDate4Back'].toString()),
-          Text('sortAscending: ' + listSettings['sortAscending'].toString()),
-          HomeList(widget.uiList.getFilteredAndSorted(listSettings)),
+          HomeList(
+              widget.uiList.getFilteredAndSorted(listSettings), onSaveItem),
         ])),
         floatingActionButton: FloatingActionButton(
             child: Text('NEW'),
@@ -58,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ItemScreen(Item.newNoID()),
+                  builder: (context) => ItemScreen(Item.newNoID(), onSaveItem),
                 ),
               );
             })));

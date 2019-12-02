@@ -5,45 +5,65 @@ class UIList {
       : originalData = {
           '0': Item('0', 'Reading 1 Long title long title what will happen?',
               DateTime.now(), null, null, null, null),
-          '1': Item('0', 'Reading 1', DateTime.now(), null, null, DateTime(2020, 1, 2), null),
-          '10': Item('0', 'Reading 1', DateTime.now(), null, null, null, null),
+          '1': Item('0', 'Reading 1', DateTime(2001, 3, 17), null, null,
+              DateTime(2020, 1, 2), null),
+          '10': Item(
+              '0', 'Reading 1', DateTime(2020, 1, 5), null, null, null, null),
         };
 
-  Map<String, Item> getOriginalData() {
-    // print("do you see me?");
-    // Map fakeData = {};
-    // fakeData['0'] =
-    //     Item('0', 'Reading 1', DateTime.now(), null, 'Looks good!', 'See you!');
-    // fakeData['1'] = Item('1', 'Reading 2', DateTime.now(), null,
-    //     'Looks fantastico!', 'Good nite!');
+  Future<Item> saveItemInDB(item) {}
 
-    // return fakeData;
-  } //At initialization, and if choose to, later
+  //Fetch from db
+  Map<String, Item> getOriginalData() {}
 
   //Call this to set HomeScreen's state
   List<Item> getFilteredAndSorted(settings) {
     List<Item> output = [];
-    originalData.forEach((_, item) {
-      output.add(item);
-      output.add(item);
-      output.add(item);
-      output.add(item);
-    });
+
+    //Filter
+    if (settings['filterOnceOnly']) {
+      originalData.forEach((_, item) {
+        if (item.date4back == null) {
+          output.add(item);
+        }
+      });
+    } else {
+      originalData.forEach((_, item) {
+        output.add(item);
+      });
+    }
+
+    //Sort
+    if (settings['sortByDate4Back']) {
+      //Its possible that the date4back is null. Split and sort separately
+      List<Item> nullList = [];
+      List<Item> nonNullList = [];
+      output.forEach((item) {
+        if (item.date4back == null) {
+          nullList.add(item);
+        } else {
+          nonNullList.add(item);
+        }
+      });
+
+      if (settings['sortAscending']) {
+        nonNullList
+            .sort((itemA, itemB) => itemA.date4back.compareTo(itemB.date4back));
+      } else {
+        nonNullList
+            .sort((itemA, itemB) => itemB.date4back.compareTo(itemA.date4back));
+      }
+
+      output = []..addAll(nonNullList)..addAll(nullList);
+    } else {
+      if (settings['sortAscending']) {
+        output.sort((itemA, itemB) => itemA.date.compareTo(itemB.date));
+      } else {
+        output.sort((itemA, itemB) => itemB.date.compareTo(itemA.date));
+      }
+    }
+
     return output;
-  }
-
-  addItem(Item item) {
-    String id = item.id;
-    originalData[id] = item;
-  }
-
-  editItem(Item item) {
-    String id = item.id;
-    originalData[id] = item;
-  }
-
-  deleteItemById(int itemId) {
-    originalData.remove(itemId);
   }
 }
 
@@ -59,8 +79,14 @@ class Item {
   Item(this.id, this.title, this.date, this.image, this.firstNote,
       this.date4back, this.secondNote);
 
-  Item.newNoID() : 
-    id=null, title=null, date=DateTime.now(), image=null, firstNote=null, date4back=null, secondNote=null;
+  Item.newNoID()
+      : id = null,
+        title = null,
+        date = DateTime.now(),
+        image = null,
+        firstNote = null,
+        date4back = null,
+        secondNote = null;
 
   copy() {
     Item newItem =

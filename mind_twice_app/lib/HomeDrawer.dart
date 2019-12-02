@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 //On every change of settings, the state class will update the parent (home screen).
-//That will re-render the home screen, which also re-render this drawer class.
 
 class HomeDrawer extends StatefulWidget {
   Map<String, bool> listSettings;
