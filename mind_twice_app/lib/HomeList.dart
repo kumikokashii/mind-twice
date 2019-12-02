@@ -63,8 +63,8 @@ class HomeList extends StatelessWidget {
                     ),
                     Row(
                       children: <Widget>[
-                        getSmallTextContainer(getStrDate(item.date4back), Colors.pink[50]),
-                        getSmallTextContainer(getStrDate(item.date), Colors.green[50]),
+                        getSmallTextContainer(getStrDate(item.date4back), Colors.green[50]),
+                        getSmallTextContainer(getStrDate(item.date), Colors.yellow[50]),
                       ],
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     )

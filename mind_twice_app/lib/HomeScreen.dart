@@ -4,7 +4,6 @@ import './HomeDrawer.dart';
 import './HomeList.dart';
 import './ItemScreen.dart';
 
-
 class HomeScreen extends StatefulWidget {
   final UIList uiList;
   HomeScreen(this.uiList);
@@ -15,13 +14,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   //Variables
-  Map<String, dynamic> listSettings;
+  Map<String, bool> listSettings;
   Map<String, Item> originalData;
   //
 
   //Constructor
   _HomeScreenState(this.originalData)
-      : listSettings = {'sortByAscending': true},
+      : listSettings = {
+          'filterOnceOnly': false,
+          'sortByDate4Back': false, //Default is sort by date
+          'sortAscending': true
+        },
         super();
 
   //Methods
@@ -44,7 +47,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 onListSettingsChanged: onListSettingsChanged)),
         body: SingleChildScrollView(
             child: Column(children: [
-          Text('Sort Order: ' + listSettings['sortByAscending'].toString()),
+          Text('filterOnceOnly: ' + listSettings['filterOnceOnly'].toString()),
+          Text('sortByDate4Back: ' + listSettings['sortByDate4Back'].toString()),
+          Text('sortAscending: ' + listSettings['sortAscending'].toString()),
           HomeList(widget.uiList.getFilteredAndSorted(listSettings)),
         ])),
         floatingActionButton: FloatingActionButton(
