@@ -35,6 +35,10 @@ class HomeList extends StatelessWidget {
       ));
     }
 
+    String getTitleText(item) {
+      return item.title == null ? 'TBD' : item.title;
+    }
+
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
@@ -47,7 +51,7 @@ class HomeList extends StatelessWidget {
                   children: <Widget>[
                     Container(
                         alignment: Alignment.centerLeft,
-                        child: Text(item.title,
+                        child: Text(getTitleText(item),
                             style: TextStyle(
                               fontSize: 18,
                             )),

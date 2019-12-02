@@ -1,6 +1,11 @@
-class UIList {
-  Map<String, Item> originalData; //Key is id, Value is item
+import './DatabaseHelper.dart';
 
+class UIList {
+  Map<String, Item> originalData;
+
+  UIList();
+
+  //Temp while testing
   UIList.defaultConstructor()
       : originalData = {
           '0': Item('0', 'Reading 1 Long title long title what will happen?',
@@ -11,10 +16,38 @@ class UIList {
               '0', 'Reading 1', DateTime(2020, 1, 5), null, null, null, null),
         };
 
-  Future<Item> saveItemInDB(item) {}
+  Future<String> saveItemInDB(item) async {
+    String id = item.id;
+    if (item.id == null) {
+      int newId = await DatabaseHelper.instance.insert(item);
+      id = newId.toString();
+    } else {
+      await DatabaseHelper.instance.update(item);
+    }
+    return id;
+  }
 
   //Fetch from db
-  Map<String, Item> getOriginalData() {}
+  Future<void> setOriginalData() async {
+    List dbOutput = await DatabaseHelper.instance.getAll();
+
+    Map<String, Item> output = {};
+    dbOutput.forEach((itemDict) {
+      String id = itemDict['id'].toString();
+      DateTime date =
+          itemDict['date'] == null ? null : DateTime.parse(itemDict['date']);
+      DateTime date4back = itemDict['date4back'] == null
+          ? null
+          : DateTime.parse(itemDict['date4back']);
+
+      Item item = Item(id, itemDict['title'], date, itemDict['image'],
+          itemDict['firstNote'], date4back, itemDict['secondNote']);
+
+      output[id] = item;
+    });
+
+    originalData = output;
+  }
 
   //Call this to set HomeScreen's state
   List<Item> getFilteredAndSorted(settings) {
@@ -34,10 +67,11 @@ class UIList {
     }
 
     //Sort
+    //Its possible that the date4back is null. Split and sort separately
+    List<Item> nullList = [];
+    List<Item> nonNullList = [];
+    
     if (settings['sortByDate4Back']) {
-      //Its possible that the date4back is null. Split and sort separately
-      List<Item> nullList = [];
-      List<Item> nonNullList = [];
       output.forEach((item) {
         if (item.date4back == null) {
           nullList.add(item);
@@ -53,16 +87,23 @@ class UIList {
         nonNullList
             .sort((itemA, itemB) => itemB.date4back.compareTo(itemA.date4back));
       }
-
-      output = []..addAll(nonNullList)..addAll(nullList);
     } else {
+      output.forEach((item) {
+        if (item.date == null) {
+          nullList.add(item);
+        } else {
+          nonNullList.add(item);
+        }
+      });
+
       if (settings['sortAscending']) {
-        output.sort((itemA, itemB) => itemA.date.compareTo(itemB.date));
+        nonNullList.sort((itemA, itemB) => itemA.date.compareTo(itemB.date));
       } else {
-        output.sort((itemA, itemB) => itemB.date.compareTo(itemA.date));
+        nonNullList.sort((itemA, itemB) => itemB.date.compareTo(itemA.date));
       }
     }
-
+    
+    output = []..addAll(nonNullList)..addAll(nullList);
     return output;
   }
 }

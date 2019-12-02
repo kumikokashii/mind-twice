@@ -9,17 +9,16 @@ class HomeScreen extends StatefulWidget {
   HomeScreen(this.uiList);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState(uiList.originalData);
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   //Variables
   Map<String, bool> listSettings;
-  Map<String, Item> originalData;
   //
 
   //Constructor
-  _HomeScreenState(this.originalData)
+  _HomeScreenState()
       : listSettings = {
           'filterOnceOnly': false,
           'sortByDate4Back': false,
@@ -34,11 +33,11 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  onSaveItem(item) {
-    //do the thing
-    print('do the thing');
-    widget.uiList.saveItemInDB(item);
-    originalData = widget.uiList.getOriginalData();
+  Future<void> onSaveItem(item) async {
+    await widget.uiList.saveItemInDB(item);
+    await widget.uiList.setOriginalData();
+    print('YAY');
+    setState(() {});
   }
 
   //Build
