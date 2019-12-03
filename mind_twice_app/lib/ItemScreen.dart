@@ -23,7 +23,7 @@ class _ItemScreenState extends State<ItemScreen> {
         tempImage = null,
         super();
 
-  Future<void> saveItem() async {
+  Future<void> saveItem(context) async {
     //Format item
     if (tempImage != null) {
       List<int> imageBytes = await tempImage.readAsBytes();
@@ -32,6 +32,19 @@ class _ItemScreenState extends State<ItemScreen> {
 
     String id = await widget.onSaveItem(item);
     item.id = id;
+
+    //Snackbar
+    final snackBar = SnackBar(
+      content: Container(
+        child: Text('Saved',
+        style: TextStyle(
+          fontSize: 20),
+          textAlign: TextAlign.center
+        ),
+      ),
+      duration: const Duration(milliseconds: 750)
+    );
+    Scaffold.of(context).showSnackBar(snackBar);
   }
 
   //Parts
@@ -230,11 +243,13 @@ class _ItemScreenState extends State<ItemScreen> {
           date4backPart(context),
           secondNotePart(context),
         ])),
-        floatingActionButton: FloatingActionButton(
-          child: Text('Save'),
-          onPressed: () {
-            saveItem();
-          },
-        ));
+        floatingActionButton: Builder(builder: (BuildContext context) {
+          return FloatingActionButton(
+            child: Text('Save'),
+            onPressed: () {
+              saveItem(context);
+            },
+          );
+        }));
   }
 }
