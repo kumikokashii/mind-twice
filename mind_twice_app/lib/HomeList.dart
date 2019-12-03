@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:swipedetector/swipedetector.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import './ItemScreen.dart';
 import './UIList.dart';
 
@@ -9,6 +9,7 @@ class HomeList extends StatelessWidget {
   Function onSaveItem;
   Function onDeleteItem;
   HomeList(this.items, this.onSaveItem, this.onDeleteItem);
+  final SlidableController slidableController = SlidableController();
 
   Future<void> deleteItem(item) async {
     onDeleteItem(item);
@@ -49,17 +50,34 @@ class HomeList extends StatelessWidget {
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
           Item item = items[index];
-          return Card(child: InkWell(
+          return Slidable(
+              actionPane: SlidableScrollActionPane(),
+              controller: slidableController, //Only 1 open at a time
+              actionExtentRatio: 0.25,
+              secondaryActions: <Widget>[
+                IconSlideAction(
+                  caption: 'Delete',
+                  color: Colors.red,
+                  icon: Icons.delete,
+                  onTap: () {
+                    deleteItem(item);
+                  },
+                ),
+              ],
+              child: Card(
+                child: InkWell(
                   child: Column(
                     children: <Widget>[
                       Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(getTitleText(item),
-                              style: TextStyle(
-                                fontSize: 18,
-                              )),
-                          padding: EdgeInsets.only(
-                              top: 14, right: 18, bottom: 7, left: 18)),
+                        alignment: Alignment.centerLeft,
+                        child: Text(getTitleText(item),
+                            style: TextStyle(
+                              fontSize: 18,
+                            )),
+                        padding: EdgeInsets.only(
+                          top: 14, right: 18, bottom: 7, left: 18
+                        )
+                      ),
                       Row(
                         children: <Widget>[
                           getSmallTextContainer(
@@ -71,7 +89,6 @@ class HomeList extends StatelessWidget {
                       )
                     ],
                   ),
-        
                   onTap: () {
                     Navigator.push(
                       context,
@@ -79,12 +96,7 @@ class HomeList extends StatelessWidget {
                         builder: (context) => ItemScreen(item, onSaveItem),
                       ),
                     );
-                  }
-          ));
-        }
-    );
+                  })));
+        });
   }
 }
-
-
-// onSwipeLeft: () {deleteItem(item);}
