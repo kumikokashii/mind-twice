@@ -46,8 +46,6 @@ class HomeList extends StatelessWidget {
     }
 
     return ListView.builder(
-        shrinkWrap: true,
-        physics: const AlwaysScrollableScrollPhysics(),
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
           Item item = items[index];

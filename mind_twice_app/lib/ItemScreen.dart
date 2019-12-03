@@ -63,6 +63,27 @@ class _ItemScreenState extends State<ItemScreen> {
     );
   }
 
+  Widget getPictureButton(source, icon) {
+    return RawMaterialButton(
+      onPressed: () async {
+        tempImage = await ImagePicker.pickImage(source: source);
+        if (tempImage == null) {
+          return;
+        }
+        setState(() {});
+      },
+      child: Icon(
+        icon,
+        color: Colors.orange[500],
+        size: 35.0,
+      ),
+      shape: CircleBorder(),
+      elevation: 12.0,
+      fillColor: Colors.white,
+      padding: EdgeInsets.all(20.0),
+    );
+  }
+
   Widget picturePart(context) {
     //image is stored in database as byte string (String).
     //image pulled from camera or gallery is an image file (File).
@@ -83,37 +104,8 @@ class _ItemScreenState extends State<ItemScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              RawMaterialButton(
-                onPressed: () async {
-                  tempImage =
-                      await ImagePicker.pickImage(source: ImageSource.gallery);
-                  if (tempImage == null) {
-                    return;
-                  }
-                  setState(() {});
-                },
-                child: Icon(
-                  Icons.photo_library,
-                  color: Colors.orange[500],
-                  size: 35.0,
-                ),
-                shape: CircleBorder(),
-                elevation: 12.0,
-                fillColor: Colors.white,
-                padding: EdgeInsets.all(20.0),
-              ),
-              RawMaterialButton(
-                onPressed: () {},
-                child: Icon(
-                  Icons.photo_camera,
-                  color: Colors.orange[500],
-                  size: 35.0,
-                ),
-                shape: CircleBorder(),
-                elevation: 12.0,
-                fillColor: Colors.white,
-                padding: EdgeInsets.all(20.0),
-              ),
+              getPictureButton(ImageSource.gallery, Icons.photo_library),
+              getPictureButton(ImageSource.camera, Icons.photo_camera)
             ],
           ))
     ])));
