@@ -45,35 +45,35 @@ class HomeList extends StatelessWidget {
       return item.title == null ? 'TBD' : item.title;
     }
 
-    return (ListView.builder(
+    return ListView.builder(
+        shrinkWrap: true,
+        physics: const AlwaysScrollableScrollPhysics(),
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
           Item item = items[index];
-          return SwipeDetector(
-              child: GestureDetector(
-                  child: Card(
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(getTitleText(item),
-                                style: TextStyle(
-                                  fontSize: 18,
-                                )),
-                            padding: EdgeInsets.only(
-                                top: 14, right: 18, bottom: 7, left: 18)),
-                        Row(
-                          children: <Widget>[
-                            getSmallTextContainer(
-                                getStrDate(item.date4back), Colors.green[50]),
-                            getSmallTextContainer(
-                                getStrDate(item.date), Colors.yellow[50]),
-                          ],
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        )
-                      ],
-                    ),
+          return Card(child: InkWell(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(getTitleText(item),
+                              style: TextStyle(
+                                fontSize: 18,
+                              )),
+                          padding: EdgeInsets.only(
+                              top: 14, right: 18, bottom: 7, left: 18)),
+                      Row(
+                        children: <Widget>[
+                          getSmallTextContainer(
+                              getStrDate(item.date4back), Colors.green[50]),
+                          getSmallTextContainer(
+                              getStrDate(item.date), Colors.yellow[50]),
+                        ],
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      )
+                    ],
                   ),
+        
                   onTap: () {
                     Navigator.push(
                       context,
@@ -81,10 +81,12 @@ class HomeList extends StatelessWidget {
                         builder: (context) => ItemScreen(item, onSaveItem),
                       ),
                     );
-                  }),
-              onSwipeLeft: () {
-                deleteItem(item);
-              });
-        }));
+                  }
+          ));
+        }
+    );
   }
 }
+
+
+// onSwipeLeft: () {deleteItem(item);}

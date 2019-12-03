@@ -67,9 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: HomeDrawer(
                 listSettings: listSettings,
                 onListSettingsChanged: onListSettingsChanged)),
-        
-        body: HomeList(widget.uiList.getFilteredAndSorted(listSettings), onSaveItem, onDeleteItem),
-
+        body: HomeList(widget.uiList.getFilteredAndSorted(listSettings),
+            onSaveItem, onDeleteItem),
         floatingActionButton: FloatingActionButton(
             child: Text('NEW'),
             onPressed: () {
