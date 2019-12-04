@@ -44,7 +44,9 @@ class UIList {
           ? null
           : DateTime.parse(itemDict[colDate4back]);
 
-      Item item = Item(id, itemDict[colTitle], date, itemDict[colImage],
+      Item item = Item(id, itemDict[colTitle], date, 
+          [itemDict[colImage1], itemDict[colImage2], itemDict[colImage3],
+          itemDict[colImage4], itemDict[colImage5]],
           itemDict[colFirstNote], date4back, itemDict[colSecondNote]);
 
       output[id] = item;
@@ -116,26 +118,26 @@ class Item {
   String id;
   String title;
   DateTime date;
-  String image;
+  List<String> images;
   String firstNote;
   DateTime date4back;
   String secondNote;
 
-  Item(this.id, this.title, this.date, this.image, this.firstNote,
+  Item(this.id, this.title, this.date, this.images, this.firstNote,
       this.date4back, this.secondNote);
 
   Item.newNoID()
       : id = null,
         title = null,
         date = DateTime.now(),
-        image = null,
+        images = List(5),
         firstNote = null,
         date4back = null,
         secondNote = null;
 
   copy() {
     Item newItem =
-        Item(id, title, date, image, firstNote, date4back, secondNote);
+        Item(id, title, date, images, firstNote, date4back, secondNote);
     return newItem;
   }
 }

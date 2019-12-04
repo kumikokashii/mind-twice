@@ -32,7 +32,7 @@ class _TextEditorState extends State<TextEditor> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          child: Text('Go!'),
+          child: Text('GO!'),
           onPressed: () {
             Navigator.pop(context, controller.text);
           },

@@ -1,8 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:carousel_slider/carousel_slider.dart';
 import './UIList.dart';
 import './TextEditor.dart';
 
@@ -15,35 +18,54 @@ class ItemScreen extends StatefulWidget {
   _ItemScreenState createState() => _ItemScreenState(item);
 }
 
+List<Uint8List> imageStrListToByteList(List<String> strList) {
+  List<Uint8List> byteList = [];
+  for (var i = 0; i < strList.length; i++) {
+    var value = strList[i];
+    if (value == null) {
+      byteList.add(null);
+    } else {
+      byteList.add(base64Decode(value));
+    }
+  }
+  return byteList;
+}
+
+List<String> imageByteListToStrList(List<Uint8List> byteList) {
+  List<String> strList = [];
+  for (var i = 0; i < byteList.length; i++) {
+    var value = byteList[i];
+    if (value == null) {
+      strList.add(null);
+    } else {
+      strList.add(base64Encode(value));
+    }
+  }
+  return strList;
+}
+
 class _ItemScreenState extends State<ItemScreen> {
   Item item;
-  File tempImage;
+  List<Uint8List> imgByteList;
   _ItemScreenState(item)
       : this.item = item.copy(),
-        tempImage = null,
+        this.imgByteList = imageStrListToByteList(item.images),
         super();
 
   Future<void> saveItem(context) async {
     //Format item
-    if (tempImage != null) {
-      List<int> imageBytes = await tempImage.readAsBytes();
-      item.image = base64Encode(imageBytes);
-    }
+    item.images = imageByteListToStrList(imgByteList);
 
     String id = await widget.onSaveItem(item);
     item.id = id;
 
     //Snackbar
     final snackBar = SnackBar(
-      content: Container(
-        child: Text('Saved',
-        style: TextStyle(
-          fontSize: 20),
-          textAlign: TextAlign.center
+        content: Container(
+          child: Text('Saved',
+              style: TextStyle(fontSize: 20), textAlign: TextAlign.center),
         ),
-      ),
-      duration: const Duration(milliseconds: 750)
-    );
+        duration: const Duration(milliseconds: 750));
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
@@ -79,11 +101,18 @@ class _ItemScreenState extends State<ItemScreen> {
   Widget getPictureButton(source, icon) {
     return RawMaterialButton(
       onPressed: () async {
-        tempImage = await ImagePicker.pickImage(source: source);
+        File tempImage = await ImagePicker.pickImage(source: source);
         if (tempImage == null) {
           return;
         }
-        setState(() {});
+
+        Uint8List tempImageInByte = await tempImage.readAsBytes();
+        for (var i = 0; i < imgByteList.length; i++) {
+          if (imgByteList[i] == null) {
+            imgByteList[i] = tempImageInByte;
+            return;
+          }
+        }
       },
       child: Icon(
         icon,
@@ -98,21 +127,15 @@ class _ItemScreenState extends State<ItemScreen> {
   }
 
   Widget picturePart(context) {
-    //image is stored in database as byte string (String).
-    //image pulled from camera or gallery is an image file (File).
-
-    Widget imageWidget = SizedBox.shrink();
-    if (tempImage != null) {
-      imageWidget = Image.file(tempImage);
-    } else if (item.image != null) {
-      imageWidget = Image.memory(base64Decode(item.image));
+    List<Widget> imageWidgets = [];
+    for (var i = 0; i < imgByteList.length; i++) {
+      if (imgByteList[i] != null) {
+        imageWidgets.add(Image.memory(imgByteList[i]));
+      }
     }
 
-    return Center(
-        child: Container(
-            child: Column(children: <Widget>[
-      imageWidget,
-      Padding(
+    if (imageWidgets.length < 5) {
+      imageWidgets.add(Padding(
           padding: EdgeInsets.all(17.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -120,14 +143,30 @@ class _ItemScreenState extends State<ItemScreen> {
               getPictureButton(ImageSource.gallery, Icons.photo_library),
               getPictureButton(ImageSource.camera, Icons.photo_camera)
             ],
-          ))
-    ])));
+          )));
+    }
+
+    return Builder(builder: (BuildContext context) {
+      return CarouselSlider(
+          height: MediaQuery.of(context).size.width,
+          viewportFraction: 1.0,
+          enableInfiniteScroll: false,
+          autoPlay: false,
+          items: imageWidgets.map((widget) {
+            return Builder(
+              builder: (BuildContext context) {
+                return Container(
+                    child: widget);
+              },
+            );
+          }).toList());
+    });
   }
 
   Widget firstNotePart(context) {
     //Normal mode is text. On tap, shows text editor. On confirm, update text.
     String text = (item.firstNote == null || item.firstNote.trim() == '')
-        ? 'Write here'
+        ? 'Write here...'
         : item.firstNote;
 
     return GestureDetector(
@@ -186,7 +225,7 @@ class _ItemScreenState extends State<ItemScreen> {
   Widget secondNotePart(context) {
     //Normal mode is text. On tap, shows text editor. On confirm, update text.
     String text = (item.secondNote == null || item.secondNote.trim() == '')
-        ? 'Write here'
+        ? 'Write here...'
         : item.secondNote;
 
     return GestureDetector(
@@ -242,10 +281,13 @@ class _ItemScreenState extends State<ItemScreen> {
           firstNotePart(context),
           date4backPart(context),
           secondNotePart(context),
+          Container(
+            height: 77,
+          )
         ])),
         floatingActionButton: Builder(builder: (BuildContext context) {
           return FloatingActionButton(
-            child: Text('Save'),
+            child: Text('SAVE'),
             onPressed: () {
               saveItem(context);
             },

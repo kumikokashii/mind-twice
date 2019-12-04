@@ -7,7 +7,11 @@ final String table = 'items';
 final colId = 'id';
 final colTitle = 'title';
 final colDate = 'date';
-final colImage = 'image';
+final colImage1 = 'image1';
+final colImage2 = 'image2';
+final colImage3 = 'image3';
+final colImage4 = 'image4';
+final colImage5 = 'image5';
 final colFirstNote = 'first_note';
 final colDate4back = 'date_for_back';
 final colSecondNote = 'second_note';
@@ -42,7 +46,11 @@ class DatabaseHelper {
         $colId INTEGER PRIMARY KEY,
         $colTitle TEXT,
         $colDate TEXT,
-        $colImage TEXT,
+        $colImage1 TEXT,
+        $colImage2 TEXT,
+        $colImage3 TEXT,
+        $colImage4 TEXT,
+        $colImage5 TEXT,
         $colFirstNote TEXT,
         $colDate4back TEXT,
         $colSecondNote TEXT
@@ -71,11 +79,17 @@ class DatabaseHelper {
     Database db = await database;
 
     String query = '''
-      INSERT INTO $table ($colTitle, $colDate, $colImage, $colFirstNote, $colDate4back, $colSecondNote)
+      INSERT INTO $table ($colTitle, $colDate, 
+        $colImage1, $colImage2, $colImage3, $colImage4, $colImage5, 
+        $colFirstNote, $colDate4back, $colSecondNote)
       VALUES(
         ${str(item.title)},
         ${str(item.date, isDateTime: true)},
-        ${str(item.image)},
+        ${str(item.images[0])},
+        ${str(item.images[1])},
+        ${str(item.images[2])},
+        ${str(item.images[3])},
+        ${str(item.images[4])},
         ${str(item.firstNote)},
         ${str(item.date4back, isDateTime: true)},
         ${str(item.secondNote)}
@@ -94,7 +108,11 @@ class DatabaseHelper {
       SET
         $colTitle = ${str(item.title)},
         $colDate = ${str(item.date, isDateTime: true)},
-        $colImage = ${str(item.image)},
+        $colImage1 = ${str(item.images[0])},
+        $colImage2 = ${str(item.images[1])},
+        $colImage3 = ${str(item.images[2])},
+        $colImage4 = ${str(item.images[3])},
+        $colImage5 = ${str(item.images[4])},
         $colFirstNote = ${str(item.firstNote)},
         $colDate4back = ${str(item.date4back, isDateTime: true)},
         $colSecondNote = ${str(item.secondNote)}
