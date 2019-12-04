@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
   //Build
   @override
   Widget build(BuildContext context) {
-    getLocalPath();
+    // getLocalPath();
 
     return (Scaffold(
         appBar: AppBar(

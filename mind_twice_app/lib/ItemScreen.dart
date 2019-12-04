@@ -126,11 +126,65 @@ class _ItemScreenState extends State<ItemScreen> {
     );
   }
 
+  void deleteIthImage(i) {
+    List<Uint8List> newImgByteList = [];
+    for (var j = 0; j < imgByteList.length; j++) {
+      if (i != j) {
+        newImgByteList.add(imgByteList[j]);
+      }
+    }
+    newImgByteList.add(null);
+    imgByteList = newImgByteList;
+    setState(() {});
+  }
+
   Widget picturePart(context) {
     List<Widget> imageWidgets = [];
     for (var i = 0; i < imgByteList.length; i++) {
       if (imgByteList[i] != null) {
-        imageWidgets.add(Image.memory(imgByteList[i]));
+        imageWidgets.add(InkWell(
+          child: Image.memory(imgByteList[i]),
+          onTap: () async {
+            var deleteResponse = await showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Center(child: Text('Delete the image?')),
+                    content: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          FlatButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                side: BorderSide(color: Colors.red, width: 2),
+                              ),
+                              child: Text('no',
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.red)),
+                              onPressed: () {
+                                Navigator.of(context).pop(false);
+                              }),
+                          FlatButton(
+                              color: Colors.red,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                side: BorderSide(color: Colors.red, width: 2),
+                              ),
+                              child: Text('yes',
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.white)),
+                              onPressed: () {
+                                Navigator.of(context).pop(true);
+                              }),
+                        ]),
+                  );
+                });
+            if (deleteResponse) {
+              deleteIthImage(i);
+            }
+          },
+        ));
       }
     }
 
@@ -155,8 +209,7 @@ class _ItemScreenState extends State<ItemScreen> {
           items: imageWidgets.map((widget) {
             return Builder(
               builder: (BuildContext context) {
-                return Container(
-                    child: widget);
+                return Container(child: widget);
               },
             );
           }).toList());
