@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
 import './UIList.dart';
 import './HomeDrawer.dart';
 import './HomeList.dart';
@@ -49,15 +51,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   //For sqlite db file location
-  Future<void> getLocalPath() async {
+  Future<String> getLocalPath() async {
     var directory = await getApplicationDocumentsDirectory();
     print(directory.path);
+    return directory.path;
   }
 
   //Build
   @override
   Widget build(BuildContext context) {
-    // getLocalPath();
+    getLocalPath();
 
     return (Scaffold(
         appBar: AppBar(

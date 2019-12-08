@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "803982959595",
+    "firebase_url": "https://mind-twice.firebaseio.com",
+    "project_id": "mind-twice",
+    "storage_bucket": "mind-twice.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:803982959595:android:5d2330a50c2a53b57a2fae",
+        "android_client_info": {
+          "package_name": "com.example.mind_twice_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "803982959595-iudr072h7cdcdclrb5f640rktgd8ogpn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwXqgiGDHjaXDmtOP4DjI-J3n1d5Brfuk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "803982959595-iudr072h7cdcdclrb5f640rktgd8ogpn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "803982959595-me7usdvarnscv9mq8mhvar73poaasbk9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mindTwiceApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

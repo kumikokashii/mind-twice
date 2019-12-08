@@ -8,6 +8,9 @@ import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import './UIList.dart';
 import './TextEditor.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path_provider/path_provider.dart';
+
 
 class ItemScreen extends StatefulWidget {
   Item item;
@@ -105,6 +108,19 @@ class _ItemScreenState extends State<ItemScreen> {
         if (tempImage == null) {
           return;
         }
+
+        //Temp
+        var directory = await getApplicationDocumentsDirectory();
+        String dbFilePath = directory.path + '/' + 'MindTwice.db';
+        print(dbFilePath);
+        StorageReference storageRef =
+            FirebaseStorage.instance.ref().child('user_id.db');
+        final StorageUploadTask uploadTask = storageRef.putFile(File(dbFilePath));
+        print('hello');
+        final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
+        final String url = (await downloadUrl.ref.getDownloadURL());
+        print('URL Is $url');
+        //
 
         Uint8List tempImageInByte = await tempImage.readAsBytes();
         for (var i = 0; i < imgByteList.length; i++) {
