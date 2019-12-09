@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 //On every change of settings, the state class will update the parent (home screen).
 
@@ -16,8 +17,9 @@ class HomeDrawer extends StatefulWidget {
 
 class _HomeDrawerState extends State<HomeDrawer> {
   Map<String, bool> listSettings;
+  String formErrorMessage;
 
-  _HomeDrawerState(this.listSettings);
+  _HomeDrawerState(this.listSettings) : formErrorMessage = '';
   final _formKey = GlobalKey<FormState>();
 
   getSwitchListTileWidget(field, label, icon) {
@@ -47,6 +49,25 @@ class _HomeDrawerState extends State<HomeDrawer> {
     ));
   }
 
+  Future<String> getFirebaseAccount(action, email, password) async {
+    try {
+      AuthResult result;
+      if (action == 'create') {
+        result = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(email: email, password: password);
+      } else {
+        //'login'
+        result = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password);
+      }
+      String userId = result.user.uid;
+      return userId;
+      //Save to preference
+    } catch (e) {
+      throw (e); //change later
+    }
+  }
+
   getUserAccountWidget(context) {
     final emailInputController = TextEditingController();
     final passwordInputController = TextEditingController();
@@ -55,13 +76,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
       children: <Widget>[
         FloatingActionButton.extended(
           onPressed: () async {
-            var email_password = await showDialog(
+            var inputs = await showDialog(
                 barrierDismissible: true,
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
                       title: Center(child: Text('Create account')),
                       content: Column(children: [
+                        Text(formErrorMessage,
+                            style: TextStyle(color: Colors.red)),
                         Form(
                           key: _formKey,
                           child: Column(
@@ -119,13 +142,27 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                             style: TextStyle(
                                                 fontSize: 18,
                                                 color: Colors.white)),
-                                        onPressed: () {
+                                        onPressed: () async {
                                           if (_formKey.currentState
                                               .validate()) {
-                                            Navigator.of(context).pop([
-                                              emailInputController.text,
-                                              passwordInputController.text
-                                            ]);
+                                            try {
+                                              String userId =
+                                                  await getFirebaseAccount(
+                                                      'create',
+                                                      emailInputController.text,
+                                                      passwordInputController
+                                                          .text);
+                                              print(userId);
+                                              setState(() {
+                                                formErrorMessage = '';
+                                              });
+                                              Navigator.of(context).pop();
+                                            } catch (e) {
+                                              print(e.message);
+                                              setState(() {
+                                                formErrorMessage = e.message;
+                                              });
+                                            }
                                           } else {
                                             print('NOT VALID');
                                           }
@@ -136,11 +173,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                         ),
                       ]));
                 });
-            if (email_password == null) {
+            if (inputs == null) {
               return;
             }
-            print(email_password[0]);
-            print(email_password[1]);
           },
           icon: Icon(Icons.person_add),
           label: Text('Create account'),
