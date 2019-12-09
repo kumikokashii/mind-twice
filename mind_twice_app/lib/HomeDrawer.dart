@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 import './UserAccount.dart';
 
 //On every change of settings, the state class will update the parent (home screen).
@@ -44,17 +47,27 @@ class _HomeDrawerState extends State<HomeDrawer> {
   getSaveToCloudWidget() {
     return (Column(children: [
       FloatingActionButton.extended(
-        onPressed: () {
-          widget.prefs.setString('userId', null);
-          print('Save to cloud');
+        onPressed: () async {
+          //Local path
+          var directory = await getApplicationDocumentsDirectory();
+          String dbFilePath = directory.path + '/' + 'MindTwice.db';
+          print(dbFilePath);
+
+          //Forebase file
+          String userId = widget.prefs.getString('userId');
+          final StorageReference storageRef =
+              FirebaseStorage.instance.ref().child(userId + '.db');
+          final StorageUploadTask uploadTask =
+              storageRef.putFile(File(dbFilePath));
+          await uploadTask.onComplete;
+          print('done');
         },
         icon: Icon(Icons.cloud_upload),
         label: Text('Save to cloud'),
       ),
       SizedBox(height: 10),
       Text('Logged in as: ' + widget.prefs.getString('email'),
-        style: TextStyle(color: Colors.grey)
-      )
+          style: TextStyle(color: Colors.grey))
     ]));
   }
 
@@ -64,11 +77,11 @@ class _HomeDrawerState extends State<HomeDrawer> {
         FloatingActionButton.extended(
           onPressed: () async {
             var result = await showDialog(
-              barrierDismissible: true,
-              context: context,
-              builder: (BuildContext context) {
-                return UserAccount('create', context, widget.prefs);
-              });
+                barrierDismissible: true,
+                context: context,
+                builder: (BuildContext context) {
+                  return UserAccount('create', context, widget.prefs);
+                });
             if (result) {
               setState(() {});
             }
@@ -78,21 +91,21 @@ class _HomeDrawerState extends State<HomeDrawer> {
         ),
         SizedBox(height: 20),
         FloatingActionButton.extended(
-          onPressed: () async {
-            var result = await showDialog(
-              barrierDismissible: true,
-              context: context,
-              builder: (BuildContext context) {
-                return UserAccount('login', context, widget.prefs);
-              });
-            if (result) {
-              setState(() {});
-            }
-          },
-          icon: Icon(Icons.account_circle),
-          label: Text('Log in'),
-          foregroundColor: Theme.of(context).primaryColor,
-          backgroundColor: Colors.white),
+            onPressed: () async {
+              var result = await showDialog(
+                  barrierDismissible: true,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return UserAccount('login', context, widget.prefs);
+                  });
+              if (result) {
+                setState(() {});
+              }
+            },
+            icon: Icon(Icons.account_circle),
+            label: Text('Log in'),
+            foregroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Colors.white),
       ],
     ));
   }
