@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import './UserAccount.dart';
 
 //On every change of settings, the state class will update the parent (home screen).
 
 class HomeDrawer extends StatefulWidget {
+  SharedPreferences prefs;
   Map<String, bool> listSettings;
   Function onListSettingsChanged;
 
   HomeDrawer(
-      {@required this.listSettings, @required this.onListSettingsChanged})
+      {@required this.prefs,
+      @required this.listSettings,
+      @required this.onListSettingsChanged})
       : super();
 
   @override
@@ -17,10 +21,8 @@ class HomeDrawer extends StatefulWidget {
 
 class _HomeDrawerState extends State<HomeDrawer> {
   Map<String, bool> listSettings;
-  String formErrorMessage;
 
-  _HomeDrawerState(this.listSettings) : formErrorMessage = '';
-  final _formKey = GlobalKey<FormState>();
+  _HomeDrawerState(this.listSettings);
 
   getSwitchListTileWidget(field, label, icon) {
     return (Container(
@@ -40,141 +42,35 @@ class _HomeDrawerState extends State<HomeDrawer> {
   }
 
   getSaveToCloudWidget() {
-    return (FloatingActionButton.extended(
-      onPressed: () {
-        print('Save to cloud');
-      },
-      icon: Icon(Icons.cloud_upload),
-      label: Text('Save to cloud'),
-    ));
-  }
-
-  Future<String> getFirebaseAccount(action, email, password) async {
-    try {
-      AuthResult result;
-      if (action == 'create') {
-        result = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: email, password: password);
-      } else {
-        //'login'
-        result = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: password);
-      }
-      String userId = result.user.uid;
-      return userId;
-      //Save to preference
-    } catch (e) {
-      throw (e); //change later
-    }
+    return (Column(children: [
+      FloatingActionButton.extended(
+        onPressed: () {
+          widget.prefs.setString('userId', null);
+          print('Save to cloud');
+        },
+        icon: Icon(Icons.cloud_upload),
+        label: Text('Save to cloud'),
+      ),
+      SizedBox(height: 10),
+      Text('Logged in as: ' + widget.prefs.getString('email'),
+        style: TextStyle(color: Colors.grey)
+      )
+    ]));
   }
 
   getUserAccountWidget(context) {
-    final emailInputController = TextEditingController();
-    final passwordInputController = TextEditingController();
-
     return (Column(
       children: <Widget>[
         FloatingActionButton.extended(
           onPressed: () async {
-            var inputs = await showDialog(
-                barrierDismissible: true,
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                      title: Center(child: Text('Create account')),
-                      content: Column(children: [
-                        Text(formErrorMessage,
-                            style: TextStyle(color: Colors.red)),
-                        Form(
-                          key: _formKey,
-                          child: Column(
-                            children: <Widget>[
-                              TextFormField(
-                                controller: emailInputController,
-                                decoration: InputDecoration(labelText: 'Email'),
-                                validator: (value) =>
-                                    value.isEmpty ? 'Please enter email' : null,
-                              ),
-                              TextFormField(
-                                controller: passwordInputController,
-                                decoration:
-                                    InputDecoration(labelText: 'Password'),
-                                validator: (value) => value.isEmpty
-                                    ? 'Please enter password'
-                                    : null,
-                                obscureText: true,
-                              ),
-                              SizedBox(
-                                height: 25,
-                              ),
-                              Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    FlatButton(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          side: BorderSide(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              width: 2),
-                                        ),
-                                        child: Text('Cancel',
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                color: Theme.of(context)
-                                                    .primaryColor)),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        }),
-                                    FlatButton(
-                                        color: Theme.of(context).primaryColor,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          side: BorderSide(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              width: 2),
-                                        ),
-                                        child: Text('Create',
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.white)),
-                                        onPressed: () async {
-                                          if (_formKey.currentState
-                                              .validate()) {
-                                            try {
-                                              String userId =
-                                                  await getFirebaseAccount(
-                                                      'create',
-                                                      emailInputController.text,
-                                                      passwordInputController
-                                                          .text);
-                                              print(userId);
-                                              setState(() {
-                                                formErrorMessage = '';
-                                              });
-                                              Navigator.of(context).pop();
-                                            } catch (e) {
-                                              print(e.message);
-                                              setState(() {
-                                                formErrorMessage = e.message;
-                                              });
-                                            }
-                                          } else {
-                                            print('NOT VALID');
-                                          }
-                                        }),
-                                  ])
-                            ],
-                          ),
-                        ),
-                      ]));
-                });
-            if (inputs == null) {
-              return;
+            var result = await showDialog(
+              barrierDismissible: true,
+              context: context,
+              builder: (BuildContext context) {
+                return UserAccount('create', context, widget.prefs);
+              });
+            if (result) {
+              setState(() {});
             }
           },
           icon: Icon(Icons.person_add),
@@ -182,20 +78,28 @@ class _HomeDrawerState extends State<HomeDrawer> {
         ),
         SizedBox(height: 20),
         FloatingActionButton.extended(
-            onPressed: () {
-              print('Log in');
-            },
-            icon: Icon(Icons.account_circle),
-            label: Text('Log in'),
-            foregroundColor: Theme.of(context).primaryColor,
-            backgroundColor: Colors.white),
+          onPressed: () async {
+            var result = await showDialog(
+              barrierDismissible: true,
+              context: context,
+              builder: (BuildContext context) {
+                return UserAccount('login', context, widget.prefs);
+              });
+            if (result) {
+              setState(() {});
+            }
+          },
+          icon: Icon(Icons.account_circle),
+          label: Text('Log in'),
+          foregroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Colors.white),
       ],
     ));
   }
 
   @override
   Widget build(BuildContext context) {
-    bool loggedIn = false;
+    bool loggedIn = widget.prefs.getString('userId') != null;
 
     return (SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 5),

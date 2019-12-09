@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import './UIList.dart';
 import './HomeDrawer.dart';
@@ -8,8 +9,9 @@ import './HomeList.dart';
 import './ItemScreen.dart';
 
 class HomeScreen extends StatefulWidget {
+  final SharedPreferences prefs;
   final UIList uiList;
-  HomeScreen(this.uiList);
+  HomeScreen(this.prefs, this.uiList);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -68,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         drawer: Drawer(
             child: HomeDrawer(
+                prefs: widget.prefs,
                 listSettings: listSettings,
                 onListSettingsChanged: onListSettingsChanged)),
         body: HomeList(widget.uiList.getFilteredAndSorted(listSettings),
