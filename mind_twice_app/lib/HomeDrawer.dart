@@ -51,7 +51,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
           //Local path
           var directory = await getApplicationDocumentsDirectory();
           String dbFilePath = directory.path + '/' + 'MindTwice.db';
-          print(dbFilePath);
 
           //Forebase file
           String userId = widget.prefs.getString('userId');
@@ -60,7 +59,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
           final StorageUploadTask uploadTask =
               storageRef.putFile(File(dbFilePath));
           await uploadTask.onComplete;
-          print('done');
         },
         icon: Icon(Icons.cloud_upload),
         label: Text('Save to cloud'),
