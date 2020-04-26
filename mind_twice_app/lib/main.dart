@@ -3,6 +3,8 @@ import 'HomeScreen.dart';
 import './UIList.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   UIList uiList = UIList();
   await uiList.setOriginalData();
 
