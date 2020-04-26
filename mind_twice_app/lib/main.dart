@@ -24,10 +24,13 @@ Future<void> copyCloudDBtoLocalDB(userId) async {
 }
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   SharedPreferences prefs = await SharedPreferences.getInstance();
   if (prefs.getString('email') != null) {
     await copyCloudDBtoLocalDB(prefs.getString('userId'));
   }
+
   UIList uiList = UIList();
   await uiList.setOriginalData();
 
