@@ -34,9 +34,13 @@ class DatabaseHelper {
     return _database;
   }
 
-  Future<Database> _initDatabase() async {
+  static Future<String> getPathToDatabase() async {
     Directory dir = await getApplicationDocumentsDirectory();
-    String path = join(dir.path, _dbName);
+    return join(dir.path, _dbName);
+  }
+
+  Future<Database> _initDatabase() async {
+    String path = await DatabaseHelper.getPathToDatabase();
     return await openDatabase(path, version: _dbVersion, onCreate: _onCreate);
   }
 

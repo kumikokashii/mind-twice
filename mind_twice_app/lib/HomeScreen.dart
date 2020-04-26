@@ -48,17 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
-  //For sqlite db file location
-  Future<void> getLocalPath() async {
-    var directory = await getApplicationDocumentsDirectory();
-    print(directory.path);
-  }
-
   //Build
   @override
   Widget build(BuildContext context) {
-    // getLocalPath();
-
     return (Scaffold(
         appBar: AppBar(
           title: Text('Stuff to Mind Twice'),
