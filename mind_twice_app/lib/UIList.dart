@@ -5,18 +5,7 @@ class UIList {
 
   UIList();
 
-  //Temp while testing
-  // UIList.defaultConstructor()
-  //     : originalData = {
-  //         '0': Item('0', 'Reading 1 Long title long title what will happen?',
-  //             DateTime.now(), null, null, null, null),
-  //         '1': Item('0', 'Reading 1', DateTime(2001, 3, 17), null, null,
-  //             DateTime(2020, 1, 2), null),
-  //         '10': Item(
-  //             '0', 'Reading 1', DateTime(2020, 1, 5), null, null, null, null),
-  //       };
-
-  Future<String> saveItemInDB(item) async {
+  Future<String> saveItemInDB(Item item) async {
     String id = item.id;
     if (item.id == null) {
       int newId = await DatabaseHelper.instance.insert(item);
@@ -27,8 +16,14 @@ class UIList {
     return id;
   }
 
-  Future<void> deleteItemInDB(item) async {
+  Future<void> deleteItemInDB(Item item) async {
     DatabaseHelper.instance.delete(item);
+  }
+
+  Future<void> loadTestData(data) async {
+    data.forEach((item) async {
+      await saveItemInDB(item);
+    });
   }
 
   //Fetch from db
@@ -36,20 +31,9 @@ class UIList {
     List dbOutput = await DatabaseHelper.instance.getAll();
 
     Map<String, Item> output = {};
-    dbOutput.forEach((itemDict) {
-      String id = itemDict[colId].toString();
-      DateTime date =
-          itemDict[colDate] == null ? null : DateTime.parse(itemDict[colDate]);
-      DateTime date4back = itemDict[colDate4back] == null
-          ? null
-          : DateTime.parse(itemDict[colDate4back]);
-
-      Item item = Item(id, itemDict[colTitle], date, 
-          [itemDict[colImage1], itemDict[colImage2], itemDict[colImage3],
-          itemDict[colImage4], itemDict[colImage5]],
-          itemDict[colFirstNote], date4back, itemDict[colSecondNote]);
-
-      output[id] = item;
+    dbOutput.forEach((row) {
+      Item item = Item.fromDBrow(row);
+      output[item.id] = item;
     });
 
     originalData = output;
@@ -134,6 +118,15 @@ class Item {
         firstNote = null,
         date4back = null,
         secondNote = null;
+
+  Item.fromDBrow(row)
+      : id = row[colId].toString(),
+        title = row[colTitle],
+        date = row[colDate] == null ? null : DateTime.parse(row[colDate]),
+        images = List<String>.from(listColImages.map((col) => row[col])),
+        firstNote = row[colFirstNote],
+        date4back = row[colDate4back] == null ? null : DateTime.parse(row[colDate4back]),
+        secondNote = row[colSecondNote];
 
   copy() {
     Item newItem =

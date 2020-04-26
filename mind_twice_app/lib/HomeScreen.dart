@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import './UIList.dart';
 import './HomeDrawer.dart';
 import './HomeList.dart';
@@ -34,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<String> onSaveItem(item) async {
+  Future<String> onSaveItem(Item item) async {
     String id = await widget.uiList.saveItemInDB(item);
     await widget.uiList.setOriginalData();
     setState(() {});
@@ -42,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return id;
   }
 
-  Future<void> onDeleteItem(item) async {
+  Future<void> onDeleteItem(Item item) async {
     await widget.uiList.deleteItemInDB(item);
     await widget.uiList.setOriginalData();
     setState(() {});

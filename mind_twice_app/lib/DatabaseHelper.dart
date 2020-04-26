@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:path/path.dart';
+import 'UIList.dart';
 
 final String table = 'items';
 final colId = 'id';
@@ -12,6 +13,7 @@ final colImage2 = 'image2';
 final colImage3 = 'image3';
 final colImage4 = 'image4';
 final colImage5 = 'image5';
+final listColImages = [colImage1, colImage2, colImage3, colImage4, colImage5];
 final colFirstNote = 'first_note';
 final colDate4back = 'date_for_back';
 final colSecondNote = 'second_note';
@@ -25,6 +27,11 @@ class DatabaseHelper {
   DatabaseHelper._();
   static final DatabaseHelper instance = DatabaseHelper._();
 
+  Future<Database> _initDatabase() async {
+    String path = await getPathToDatabase();
+    return await openDatabase(path, version: _dbVersion, onCreate: _onCreate);
+  }
+
   //getter for database
   Future<Database> get database async {
     if (_database != null) {
@@ -34,14 +41,19 @@ class DatabaseHelper {
     return _database;
   }
 
-  static Future<String> getPathToDatabase() async {
+  Future<String> getPathToDatabase() async {
     Directory dir = await getApplicationDocumentsDirectory();
     return join(dir.path, _dbName);
   }
 
-  Future<Database> _initDatabase() async {
-    String path = await DatabaseHelper.getPathToDatabase();
-    return await openDatabase(path, version: _dbVersion, onCreate: _onCreate);
+  Future<void> resetDBfile() async {
+    //delete if exists
+    String path = await getPathToDatabase();
+    if (FileSystemEntity.typeSync(path) != FileSystemEntityType.notFound) {
+      File(path).delete();
+    }
+    //init
+    _database = await _initDatabase();
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -79,7 +91,7 @@ class DatabaseHelper {
     return '"' + value + '"';
   }
 
-  Future<int> insert(item) async {
+  Future<int> insert(Item item) async {
     Database db = await database;
 
     String query = '''
@@ -104,7 +116,7 @@ class DatabaseHelper {
     return id;
   }
 
-  Future<void> update(item) async {
+  Future<void> update(Item item) async {
     Database db = await database;
 
     String query = '''
@@ -127,7 +139,7 @@ class DatabaseHelper {
     await db.rawUpdate(query);
   }
 
-  Future<void> delete(item) async {
+  Future<void> delete(Item item) async {
     Database db = await database;
 
     String query = '''
