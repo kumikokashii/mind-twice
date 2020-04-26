@@ -1,4 +1,4 @@
-import 'UIList.dart';
+import './components/UIList.dart';
 
 Map initSetup = {
   'RESET_DATA': false,

@@ -2,7 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:path/path.dart';
-import 'UIList.dart';
+import './components/UIList.dart';
 
 final String table = 'items';
 final colId = 'id';

@@ -1,7 +1,7 @@
 import 'config.dart';
 import 'package:flutter/material.dart';
-import 'HomeScreen.dart';
-import './UIList.dart';
+import './components/HomeScreen.dart';
+import './components/UIList.dart';
 import 'DatabaseHelper.dart';
 
 void main() async {

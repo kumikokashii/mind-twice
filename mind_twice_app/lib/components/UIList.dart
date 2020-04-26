@@ -1,4 +1,4 @@
-import './DatabaseHelper.dart';
+import '../DatabaseHelper.dart';
 
 class UIList {
   Map<String, Item> originalData;
