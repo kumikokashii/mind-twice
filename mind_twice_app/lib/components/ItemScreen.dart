@@ -114,9 +114,10 @@ class _ItemScreenState extends State<ItemScreen> {
         for (var i = 0; i < imgByteList.length; i++) {
           if (imgByteList[i] == null) {
             imgByteList[i] = tempImageInByte;
-            return;
+            break;
           }
         }
+        setState(() {});
       },
       child: Icon(
         icon,
