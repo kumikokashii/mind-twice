@@ -40,13 +40,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
   Widget build(BuildContext context) {
     return (
       SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 5),
+        padding: EdgeInsets.symmetric(vertical: 60, horizontal: 5),
         child: Column(
           children: [
             getSwitchListTileWidget('filterOnceOnly', 'Only show once-minded items', Icons.battery_unknown),
-            getSwitchListTileWidget('sortByDate4Back', 'Sort by date to be back', Icons.calendar_today),
+            getSwitchListTileWidget('sortByDate4Back', 'Sort by 2nd date', Icons.calendar_today),
             getSwitchListTileWidget('sortAscending', 'Sort ascending', Icons.arrow_upward),
-          ])
+          ]),
       ));
   }
 }

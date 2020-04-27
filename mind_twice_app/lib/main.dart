@@ -20,5 +20,9 @@ void main() async {
   runApp(MaterialApp(
     title: 'Mind Twice',
     home: HomeScreen(uiList),
+    theme: ThemeData(
+      primaryColor: themeColor,
+      accentColor: themeColor
+    )
   ));
 }

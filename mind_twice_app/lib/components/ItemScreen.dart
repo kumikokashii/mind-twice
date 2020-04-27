@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import './UIList.dart';
 import './TextEditor.dart';
+import './reusable.dart';
 
 class ItemScreen extends StatefulWidget {
   Item item;
@@ -75,11 +76,15 @@ class _ItemScreenState extends State<ItemScreen> {
     return GestureDetector(
       child: Center(
           child: Container(
-        child: Text(strItemDate, style: TextStyle(fontSize: 20)),
-        color: Colors.yellow[200],
-        alignment: Alignment.center,
-        padding: EdgeInsets.all(8.0),
-      )),
+            child: Row(children: <Widget>[
+              getSmallTextContainer('1st', Colors.yellow[50]),
+              Text(strItemDate, style: TextStyle(fontSize: 20)),
+            ]),
+            color: Colors.yellow[200],
+            alignment: Alignment.center,
+            padding: EdgeInsets.all(8.0),
+          )
+      ),
       onTap: () {
         showDatePicker(
                 context: context,
@@ -245,17 +250,21 @@ class _ItemScreenState extends State<ItemScreen> {
 
   Widget date4backPart(context) {
     String strItemDate4Back = (item.date4back == null)
-        ? 'Pick your next date'
+        ? 'Pick a date'
         : DateFormat('E, MMMM d, y').format(item.date4back);
 
     return GestureDetector(
       child: Center(
           child: Container(
-        child: Text(strItemDate4Back, style: TextStyle(fontSize: 20)),
-        color: Colors.lightGreen[100],
-        alignment: Alignment.center,
-        padding: EdgeInsets.all(8.0),
-      )),
+            child: Row(children: <Widget>[
+                  getSmallTextContainer('2nd', Colors.green[50]),
+                  Text(strItemDate4Back, style: TextStyle(fontSize: 20)),
+                ]),
+            color: Colors.lightGreen[100],
+            alignment: Alignment.center,
+            padding: EdgeInsets.all(8.0),
+          )
+      ),
       onTap: () {
         showDatePicker(
                 context: context,
@@ -339,7 +348,7 @@ class _ItemScreenState extends State<ItemScreen> {
         ])),
         floatingActionButton: Builder(builder: (BuildContext context) {
           return FloatingActionButton(
-            child: Text('SAVE'),
+            child: Icon(Icons.save),
             onPressed: () {
               saveItem(context);
             },

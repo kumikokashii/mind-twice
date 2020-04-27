@@ -3,6 +3,7 @@ import './UIList.dart';
 import './HomeDrawer.dart';
 import './HomeList.dart';
 import './ItemScreen.dart';
+import './reusable.dart';
 
 class HomeScreen extends StatefulWidget {
   final UIList uiList;
@@ -51,8 +52,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return (Scaffold(
+        backgroundColor: Colors.grey[100],
         appBar: AppBar(
-          title: Text('Stuff to Mind Twice'),
+            title: Row(children: <Widget>[
+              Text('Mind Twice'),
+              Row(children: <Widget>[
+                getSmallTextContainer('1st', Colors.yellow[50]),
+                getSmallTextContainer('2nd', Colors.green[50]),
+              ])
+            ],
+            mainAxisAlignment: MainAxisAlignment.spaceBetween)
         ),
         drawer: Drawer(
             child: HomeDrawer(
@@ -61,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: HomeList(widget.uiList.getFilteredAndSorted(listSettings),
             onSaveItem, onDeleteItem),
         floatingActionButton: FloatingActionButton(
-            child: Text('NEW'),
+            child:  Icon(Icons.add),
             onPressed: () {
               Navigator.push(
                 context,
