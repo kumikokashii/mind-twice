@@ -23,7 +23,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
     return (Container(
       child: SwitchListTile(
         title: Text(label),
-        value: listSettings[field] == null ? false : listSettings[field],
+        value: listSettings[field] ?? false,
         onChanged: (newValue) {
           setState(() {
             listSettings[field] = newValue;
