@@ -10,3 +10,4 @@ Cross-platform Mobile journal app written with Flutter. Inspired by tarot readin
 - [image_picker not found error on Xcode](https://github.com/flutter/flutter/issues/15152)
 - [dyld: Library not loaded error on Xcode](https://github.com/Alamofire/Alamofire/issues/3051)
 - [directory not found for option warning on Xcode](https://stackoverflow.com/questions/9458739/ld-warning-directory-not-found-for-option)
+- [library not found error](https://stackoverflow.com/questions/26287103/cocoapods-warning-cocoapods-did-not-set-the-base-configuration-of-your-project)
