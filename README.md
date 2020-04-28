@@ -12,3 +12,4 @@ Cross-platform Mobile journal app written with Flutter. Inspired by tarot readin
 - [directory not found for option warning on Xcode](https://stackoverflow.com/questions/9458739/ld-warning-directory-not-found-for-option)
 - [library not found error](https://stackoverflow.com/questions/26287103/cocoapods-warning-cocoapods-did-not-set-the-base-configuration-of-your-project)
 - [xcode_backend.sh No such file or directory error](https://github.com/flutter/flutter/issues/17234)
+- [app crashes on startup ios](https://medium.com/stuart-engineering/weve-deployed-flutter-into-production-here-are-the-challenges-we-faced-7b89cfc414af)
