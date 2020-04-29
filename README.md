@@ -3,7 +3,7 @@
 ## What is it?
 Cross-platform Mobile journal app written with Flutter. Inspired by tarot reading to predict, and reflect later how accurate it was.
 
-(Add img)
+<img src="https://github.com/kumikokashii/mind-twice/blob/master/screenshot_home.png" alt="screenshot1" width="350px"/>&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/kumikokashii/mind-twice/blob/master/screenshot_item.png" alt="screenshot2" width="350px"/>
 
 ## References
 - [How to Test Your iOS Application on a Real Device](https://www.twilio.com/blog/2018/07/how-to-test-your-ios-application-on-a-real-device.html)
