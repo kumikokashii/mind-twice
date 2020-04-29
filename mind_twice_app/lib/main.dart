@@ -18,6 +18,7 @@ void main() async {
   await uiList.setOriginalData();
 
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: initSetup['KEEP_DEBUG_BAR'],
     title: 'Mind Twice',
     home: HomeScreen(uiList),
     theme: ThemeData(

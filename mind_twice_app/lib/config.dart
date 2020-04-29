@@ -4,20 +4,23 @@ import 'package:flutter/material.dart';
 final themeColor = Colors.pink[100];
 
 Map initSetup = {
-  'RESET_DATA': false,
+  'KEEP_DEBUG_BAR': false,
+  'RESET_DATA': true,
   'LOAD_TEST_DATA': true,
   'TEST_DATA': [
-    Item(
-        null,
-        'Lalala Long title long title long title..............................',
-        DateTime.now(),
-        [null, null, null, null, null],
-        null,
-        null,
-        null),
-    Item(null, 'Saturn x Pluto', DateTime(2020, 1, 12),
-        [null, null, null, null, null], null, DateTime(2020, 9, 12), null),
-    Item(null, 'Hello-', DateTime(2003, 4, 5), [null, null, null, null, null],
+    Item(null, 'Week of', DateTime(2020, 4, 20), [null, null, null, null, null],
+        null, null, null),
+    Item(null, 'Day of', DateTime(2020, 4, 20), [null, null, null, null, null],
+        null, DateTime(2020, 4, 20), null),
+    Item(null, 'Day of', DateTime(2020, 4, 21), [null, null, null, null, null],
+        null, DateTime(2020, 4, 21), null),
+    Item(null, 'Day of', DateTime(2020, 4, 22), [null, null, null, null, null],
+        null, DateTime(2020, 4, 22), null),
+    Item(null, 'Day of', DateTime(2020, 4, 23), [null, null, null, null, null],
+        "Everything will work out!", DateTime(2020, 4, 23), "The story of life is quicker than the blink of an eye, the story of love is hello and goodbye... until we meet again.\n\n - Jimi Hendrix"),
+    Item(null, 'Day of', DateTime(2020, 4, 24), [null, null, null, null, null],
+        null, DateTime(2020, 4, 24), null),
+    Item(null, 'Day of', DateTime(2020, 4, 25), [null, null, null, null, null],
         null, null, null)
   ]
 };
